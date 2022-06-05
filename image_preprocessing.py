@@ -1,6 +1,8 @@
 from PIL import Image
 from pathlib import Path
 import os, random, shutil
+import numpy as np
+import pygame
 
 def crop(input, size):
     [f.unlink() for f in Path("pool").glob("*") if f.is_file()]
@@ -29,3 +31,42 @@ def move_to_processed(image):
 
 def move_to_pool(image):
     shutil.move(os.path.join("processed_tiles", image), "pool")
+
+def flip(matrix, axis=None):
+    if not hasattr(matrix, 'ndim'):
+        matrix = np.asarray(matrix)
+    if axis is None:
+        slicer = (np.s_[::-1],) * matrix.ndim
+    else:
+        axis = np.core.numeric.normalize_axis_tuple(axis, matrix.ndim)
+        slicer = [np.s_[:]] * matrix.ndim
+        for ax in axis:
+            slicer[ax] = np.s_[::-1]
+        slicer = tuple(slicer)
+    return matrix[slicer]
+
+def rotate_90(m, k=1, axes=(0, 1)):
+    axes = tuple(axes)
+    m = np.asanyarray(m)
+    k %= 4
+    if k == 0:
+        return m[:]
+    if k == 2:
+        return flip(flip(m, axes[0]), axes[1])
+
+    axes_list = np.arange(0, m.ndim)
+    (axes_list[axes[0]], axes_list[axes[1]]) = (axes_list[axes[1]], axes_list[axes[0]])
+    if k == 1: return np.transpose(flip(m, axes[1]), axes_list)
+    else: return flip(np.transpose(m, axes_list), axes[1])
+
+def flip_image(image):
+    matrix = pygame.surfarray.array3d(image)
+    return pygame.surfarray.make_surface(flip(matrix, (0,2)))
+
+def rotate_left(image):
+    matrix = pygame.surfarray.array3d(image)
+    return pygame.surfarray.make_surface(rotate_90(matrix, 3))
+
+def rotate_right(image):
+    matrix = pygame.surfarray.array3d(image)
+    return pygame.surfarray.make_surface(rotate_90(matrix, 1))
