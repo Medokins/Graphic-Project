@@ -5,7 +5,7 @@ import sys
 from image_preprocessing import *
 
 pygame.init()
-BORDER_SIZE = 32 #left and right marging for well + right side marin
+BORDER_SIZE = 32 #left and right marging for well + right side margin
 FREE_FALL = 512 #must be power of 2
 WINDOW_SIZE = (1024 + 3*BORDER_SIZE, 512 + FREE_FALL)
 screen = pygame.display.set_mode(WINDOW_SIZE)
@@ -32,8 +32,8 @@ class Square:
         # apply random rotation to an image
         self.image = pygame.transform.rotate(self.image, self.rotation)
         # mirrored
-        if random.randrange(0, 2) == 1: # if you want mirror change any of 2 -> 1
-            self.image = pygame.transform.flip(self.image, True, False) # vertical flip = True, horizontal flip = False
+        if random.randrange(0, 2) == 1:
+            self.image = flip_image(self.image) # vertical flip = True, horizontal flip = False
             self.shift = True
         else:
             self.shift = False
@@ -57,7 +57,7 @@ class Square:
         now = pygame.time.get_ticks()
         if now - self.last >= self.cooldown:
             self.last = now
-            self.image = pygame.transform.rotate(self.image, 90)
+            self.image = rotate_left(self.image)
             if self.shift:
                 self.rotation += 270
             else:
@@ -69,7 +69,7 @@ class Square:
         now = pygame.time.get_ticks()
         if now - self.last >= self.cooldown:
             self.last = now
-            self.image = pygame.transform.rotate(self.image, 270)
+            self.image = rotate_right(self.image)
             if self.shift:
                 self.rotation += 90
             else:
@@ -106,7 +106,7 @@ class Square:
         now = pygame.time.get_ticks()
         if now - self.last >= self.cooldown:
             self.last = now
-            self.image = pygame.transform.flip(self.image, True, False) # vertical flip = True, horizontal flip = False
+            self.image = flip_image(self.image) # vertical flip = True, horizontal flip = False
             self.shift = not self.shift
             #self.sound_mirror.play()
 
