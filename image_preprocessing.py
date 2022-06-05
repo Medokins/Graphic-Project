@@ -32,6 +32,7 @@ def move_to_processed(image):
 def move_to_pool(image):
     shutil.move(os.path.join("processed_tiles", image), "pool")
 
+# numpys slightly modified matrix flip with color inveresion
 def flip(matrix, axis=None):
     if not hasattr(matrix, 'ndim'):
         matrix = np.asarray(matrix)
@@ -45,6 +46,7 @@ def flip(matrix, axis=None):
         slicer = tuple(slicer)
     return matrix[slicer]
 
+# numpys slightly modified matrix rotation
 def rotate_90(m, k=1, axes=(0, 1)):
     axes = tuple(axes)
     m = np.asanyarray(m)
