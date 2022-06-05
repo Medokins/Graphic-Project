@@ -175,13 +175,13 @@ class Game:
         continueRect.center = (WINDOW_SIZE[0] / 2, WINDOW_SIZE[1] - 50)
 
         textRect_1 = text_1.get_rect()
-        textRect_1.center = (110, FREE_FALL - 250)
+        textRect_1.center = (120, FREE_FALL - 250)
         textRect_2 = text_2.get_rect()
-        textRect_2.center = (410, FREE_FALL - 250)
+        textRect_2.center = (400, FREE_FALL - 250)
         textRect_3 = text_3.get_rect()
-        textRect_3.center = (710, FREE_FALL - 250)
+        textRect_3.center = (690, FREE_FALL - 250)
         textRect_4 = text_4.get_rect()
-        textRect_4.center = (1010, FREE_FALL - 250)
+        textRect_4.center = (980, FREE_FALL - 250)
 
         textRects = [textRect_1, textRect_2, textRect_3, textRect_4, continueRect]
 
