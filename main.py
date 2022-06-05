@@ -128,8 +128,8 @@ class Game:
 
         self.state = 'menu'
         self.photos_to_choose = [pygame.transform.scale(pygame.image.load(os.path.join('images_to_choose', '1.png')), (256, 256)),\
-                                 pygame.transform.scale(pygame.image.load(os.path.join('images_to_choose', 'Saul.png')), (256, 256)),\
-                                 pygame.transform.scale(pygame.image.load(os.path.join('images_to_choose', 'Szeregowy.png')), (256, 256))]
+                                 pygame.transform.scale(pygame.image.load(os.path.join('images_to_choose', '2.png')), (256, 256)),\
+                                 pygame.transform.scale(pygame.image.load(os.path.join('images_to_choose', '3.png')), (256, 256))]
 
     def draw_menu(self):
         # set color to bg of menu
@@ -335,11 +335,11 @@ def main():
                     game.image = 128
                     print("Chose waves")
                 if game.x > 416 and game.x < 672 and game.y > 582 and game.y < 838:
-                    choen_image_name = "Saul.png"
+                    choen_image_name = "2.png"
                     game.image = 128 + 256 + BORDER_SIZE
                     print("Chose Saul")
                 if game.x > 704 and game.x < 960 and game.y > 582 and game.y < 838:
-                    choen_image_name = "Szeregowy.png"
+                    choen_image_name = "3.png"
                     game.image = 128 + 2*(256 + BORDER_SIZE)
                     print("Chose Szeregowy")
                 
