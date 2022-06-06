@@ -20,7 +20,7 @@ def crop(input, size):
             a.save(os.path.join("pool", f"{row:02}{column:02}.png"))
 
 # this could use some optimization but it's the simplest implementation that I thought about
-def choose_radnom(row_index):
+def choose_random(row_index):
     random_image = random.choice(os.listdir("pool"))
     while (int(random_image[:2]) != row_index):
         random_image = random.choice(os.listdir("pool"))
