@@ -32,6 +32,13 @@ def move_to_processed(image):
 def move_to_pool(image):
     shutil.move(os.path.join("processed_tiles", image), "pool")
 
+# conver
+def grayscale(img):
+    arr = pygame.surfarray.array3d(img)
+    avgs = [[(r*0.298 + g*0.587 + b*0.114) for (r,g,b) in col] for col in arr]
+    arr = np.array([[[avg,avg,avg] for avg in col] for col in avgs])
+    return pygame.surfarray.make_surface(arr)
+
 # numpys slightly modified matrix flip with color inveresion
 def flip(matrix, axis=None):
     if not hasattr(matrix, 'ndim'):
@@ -58,8 +65,10 @@ def rotate_90(m, k=1, axes=(0, 1)):
 
     axes_list = np.arange(0, m.ndim)
     (axes_list[axes[0]], axes_list[axes[1]]) = (axes_list[axes[1]], axes_list[axes[0]])
-    if k == 1: return np.transpose(flip(m, axes[1]), axes_list)
-    else: return flip(np.transpose(m, axes_list), axes[1])
+    if k == 1:
+        return np.transpose(flip(m, axes[1]), axes_list)
+    else:
+        return flip(np.transpose(m, axes_list), axes[1])
 
 def flip_image(image):
     matrix = pygame.surfarray.array3d(image)
