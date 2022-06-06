@@ -125,6 +125,8 @@ class Game:
         self.image = 0
         # continue button
         self.continue_button = False
+        # game speed
+        self.speed = 0
 
         self.state = 'menu'
         self.photos_to_choose = [pygame.transform.scale(pygame.image.load(os.path.join('images_to_choose', '1.png')), (256, 256)),\
@@ -142,16 +144,21 @@ class Game:
             x += 256 + BORDER_SIZE
         
         # all the text in menu
-        font = pygame.font.Font('freesansbold.ttf', 32)
+        font = pygame.font.SysFont('Sans', 32)
 
         header_1 = font.render('CHOOSE NUMBER OF SQUARES', False, (3, 232, 252), (26,26,26))
         header_2 = font.render('CHOOSE PHOTO', False, (3, 232, 252), (26,26,26))
+        header_3 = font.render('CHOOSE SPEED', False, (3, 232, 252), (26,26,26))
         continue_button = font.render('CONTINUE', False, (3, 232, 252), (26,26,26))
         text_1 = font.render('4 SQUARES', False, (3, 232, 252), (26,26,26))
         text_2 = font.render('16 SQUARES', False, (3, 232, 252), (26,26,26))
         text_3 = font.render('64 SQUARES', False, (3, 232, 252), (26,26,26))
         text_4 = font.render('256 SQUARES', False, (3, 232, 252), (26,26,26))
-    
+
+        speed_1 = font.render('SLOW', False, (3, 232, 252), (26,26,26))
+        speed_2 = font.render('MEDIUM', False, (3, 232, 252), (26,26,26))
+        speed_3 = font.render('FAST', False, (3, 232, 252), (26,26,26))
+
         #highlight chosen size
         if self.size == 4:
             text_1 = font.render('4 SQUARES', False, (19, 191, 36), (26,26,26))
@@ -162,39 +169,65 @@ class Game:
         if self.size == 256:
             text_4 = font.render('256 SQUARES', False, (19, 191, 36), (26,26,26))
             
-        #highlight continue button
+        # highlight continue button
         if self.continue_button:
             continue_button = font.render('CONTINUE', False, (19, 191, 36), (26,26,26))
 
+        # highlight chosen speed
+        if self.speed == 1500:
+            speed_1 = font.render('SLOW', False, (19, 191, 36), (26,26,26))
+        if self.speed == 1000:
+            speed_2 = font.render('MEDIUM', False, (19, 191, 36), (26,26,26))
+        if self.speed == 500:
+            speed_3 = font.render('FAST', False, (19, 191, 36), (26,26,26))
+
         headerRect_1 = header_1.get_rect()
-        headerRect_1.center = (WINDOW_SIZE[0] / 2, (WINDOW_SIZE[1] - FREE_FALL) / 2 - 100)
+        headerRect_1.center = (WINDOW_SIZE[0] / 2, (WINDOW_SIZE[1] - FREE_FALL) / 2 - 200)
         headerRect_2 = header_2.get_rect()
         headerRect_2.center = (WINDOW_SIZE[0] / 2, FREE_FALL)
+        headerRect_3 = header_3.get_rect()
+        headerRect_3.center = (WINDOW_SIZE[0] / 2, (WINDOW_SIZE[1] - FREE_FALL) / 2)
 
         continueRect = continue_button.get_rect()
         continueRect.center = (WINDOW_SIZE[0] / 2, WINDOW_SIZE[1] - 50)
 
         textRect_1 = text_1.get_rect()
-        textRect_1.center = (120, FREE_FALL - 250)
+        textRect_1.center = (120, FREE_FALL - 350)
         textRect_2 = text_2.get_rect()
-        textRect_2.center = (400, FREE_FALL - 250)
+        textRect_2.center = (400, FREE_FALL - 350)
         textRect_3 = text_3.get_rect()
-        textRect_3.center = (690, FREE_FALL - 250)
+        textRect_3.center = (690, FREE_FALL - 350)
         textRect_4 = text_4.get_rect()
-        textRect_4.center = (980, FREE_FALL - 250)
+        textRect_4.center = (980, FREE_FALL - 350)
 
-        textRects = [textRect_1, textRect_2, textRect_3, textRect_4, continueRect]
+        speedRect_1 = speed_1.get_rect()
+        speedRect_1.center = (250, FREE_FALL - 150)
+        speedRect_2 = speed_2.get_rect()
+        speedRect_2.center = (550, FREE_FALL - 150)
+        speedRect_3 = speed_3.get_rect()
+        speedRect_3.center = (850, FREE_FALL - 150)
+
+        textRects = [textRect_1, textRect_2, textRect_3, textRect_4, speedRect_1, speedRect_2, speedRect_3, continueRect]
 
         screen.blit(continue_button, continueRect)
+
         screen.blit(header_1, headerRect_1)
         screen.blit(header_2, headerRect_2)
+        screen.blit(header_3, headerRect_3)
+
         screen.blit(text_1, textRect_1)
         screen.blit(text_2, textRect_2)
         screen.blit(text_3, textRect_3)
         screen.blit(text_4, textRect_4)
 
+        screen.blit(speed_1, speedRect_1)
+        screen.blit(speed_2, speedRect_2)
+        screen.blit(speed_3, speedRect_3)
+        
+
         # squares around pressable buttons with text
         offset = 10
+
         for text in textRects:
             #top horizontal lines
             pygame.draw.line(screen, color=(3, 232, 252),\
@@ -256,7 +289,6 @@ class Game:
 
 def grayscale(img):
     arr = pygame.surfarray.array3d(img)
-    #luminosity filter
     avgs = [[(r*0.298 + g*0.587 + b*0.114) for (r,g,b) in col] for col in arr]
     arr = np.array([[[avg,avg,avg] for avg in col] for col in avgs])
     return pygame.surfarray.make_surface(arr)
@@ -312,22 +344,33 @@ def main():
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # number of squares choosing
-                if game.x > 14 and game.x < 207 and game.y > 246 and game.y < 278:
+                if game.x > 14 and game.x < 207 and game.y > 134 and game.y < 190:
                     print("Chose 4 squares")
                     game.size = 4
                     size = 256
-                if game.x > 305 and game.x < 648 and game.y > 246 and game.y < 278:
+                if game.x > 305 and game.x < 648 and game.y > 134 and game.y < 190:
                     print("Chose 16 squares")
                     game.size = 16
                     size = 128
-                if game.x > 605 and game.x < 816 and game.y > 246 and game.y < 278:
+                if game.x > 605 and game.x < 816 and game.y > 134 and game.y < 190:
                     print("Chose 64 squares")
                     game.size = 64
                     size = 64
-                if game.x > 896 and game.x < 1125 and game.y > 246 and game.y < 278:
+                if game.x > 896 and game.x < 1125 and game.y > 134 and game.y < 190:
                     print("Chose 256 squares")
                     game.size = 256
                     size = 32
+
+                # speed of squares choosing
+                if game.x > 193 and game.x < 307 and game.y > 334 and game.y < 390:
+                    print("Chose SLOW")
+                    game.speed = 1500
+                if game.x > 475 and game.x < 625 and game.y > 334 and game.y < 390:
+                    print("Chose MEDIUM")
+                    game.speed = 1000
+                if game.x > 800 and game.x < 900 and game.y > 334 and game.y < 390:
+                    print("Chose FAST")
+                    game.speed = 500
 
                 # photo choosing
                 if game.x > 128 and game.x < 384 and game.y > 582 and game.y < 838:
@@ -361,7 +404,6 @@ def main():
     crop(chosen_image_path, size) # cuts photo into (512 / size)^2 squares
     row_index = int(512 / size) - 1
     correct_images = []
-    speed = 1000
 
     # initalization of first falling square
     random_image = choose_radnom(row_index)
@@ -409,7 +451,8 @@ def main():
         userInput = pygame.key.get_pressed()
         dt = clock.tick()
         time_elapsed_since_last_action += dt
-        if time_elapsed_since_last_action > speed:
+
+        if time_elapsed_since_last_action > game.speed:
             if tile.y + tile.size < WINDOW_SIZE[1]:
                 tile.go_down_auto()
             time_elapsed_since_last_action = 0
@@ -431,7 +474,7 @@ def main():
     
 
     end_screen = True
-    font = pygame.font.Font('freesansbold.ttf', 32)
+    font = pygame.font.SysFont('Sans', 32)
     text = font.render(f'Points: {round(points)}', False, (3, 232, 252), (26,26,26))
     textRect = text.get_rect()
     textRect.center = ((WINDOW_SIZE[0])/2 + 5*BORDER_SIZE, 200)
