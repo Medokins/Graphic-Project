@@ -287,11 +287,6 @@ class Game:
         pygame.display.update()
 
 
-def grayscale(img):
-    arr = pygame.surfarray.array3d(img)
-    avgs = [[(r*0.298 + g*0.587 + b*0.114) for (r,g,b) in col] for col in arr]
-    arr = np.array([[[avg,avg,avg] for avg in col] for col in avgs])
-    return pygame.surfarray.make_surface(arr)
 
 def draw_window(x, y, size, falling_image, placed_images, gray_scale_image, preview_image, text, text_rect):
     # background color
@@ -471,14 +466,12 @@ def main():
             tile.mirror()
 
         draw_window(tile.x, tile.y, tile.size, tile.image, correct_images, gray_scale_image, preview_image, text = None, text_rect = None)
-    
 
     end_screen = True
     font = pygame.font.SysFont('Sans', 32)
     text = font.render(f'Points: {round(points)}', False, (3, 232, 252), (26,26,26))
     textRect = text.get_rect()
     textRect.center = ((WINDOW_SIZE[0])/2 + 5*BORDER_SIZE, 200)
-
 
     while end_screen:
         for event in pygame.event.get():
