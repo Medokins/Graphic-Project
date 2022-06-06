@@ -401,7 +401,7 @@ def main():
     correct_images = []
 
     # initalization of first falling square
-    random_image = choose_radnom(row_index)
+    random_image = choose_random(row_index)
     tile = Square(random_image)
     move_to_processed(random_image)
     time_elapsed_since_last_action = 0
@@ -429,7 +429,7 @@ def main():
                 game.state = 'points_screen'
                 points = game.size*10000 / (time.time() - start_timer)
             else:
-                random_image = choose_radnom(row_index)
+                random_image = choose_random(row_index)
                 tile = Square(random_image)
                 move_to_processed(random_image)
                 time_elapsed_since_last_action = 0
@@ -438,7 +438,7 @@ def main():
         if tile.current_row == row_index and (tile.correct_place[1] != tile.current_column or tile.rotation != 0 or tile.shift == True):
             # wrong place, move this one back to pool, draw another
             move_to_pool(random_image)
-            random_image = choose_radnom(row_index)
+            random_image = choose_random(row_index)
             tile = Square(random_image)
             move_to_processed(random_image)
             time_elapsed_since_last_action = 0
