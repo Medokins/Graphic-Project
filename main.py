@@ -1,5 +1,4 @@
 import pygame
-import numpy as np
 import time
 import sys
 from image_preprocessing import *
@@ -15,10 +14,10 @@ pygame.display.set_caption("Tetris Slicer")
 # square class
 class Square:
 
-    sound_left = pygame.mixer.Sound(os.path.join("sounds", "left.wav"))
-    sound_right = pygame.mixer.Sound(os.path.join("sounds", "right.wav"))
-    sound_down = pygame.mixer.Sound(os.path.join("sounds", "down.wav"))
-    sound_mirror = pygame.mixer.Sound(os.path.join("sounds", "down.wav"))
+    # sound_left = pygame.mixer.Sound(os.path.join("sounds", "left.wav"))
+    # sound_right = pygame.mixer.Sound(os.path.join("sounds", "right.wav"))
+    # sound_down = pygame.mixer.Sound(os.path.join("sounds", "down.wav"))
+    # sound_mirror = pygame.mixer.Sound(os.path.join("sounds", "mirror.wav"))
 
     def __init__(self, image_name):
         # x coordinate at the top left corner
@@ -481,6 +480,5 @@ def main():
                 sys.exit()
         draw_window(tile.x, tile.y, tile.size, tile.image, correct_images, gray_scale_image, preview_image, text, textRect)
 
-# to not run other files while running main
 if __name__ == "__main__":
     main()
